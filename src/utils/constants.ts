@@ -79,7 +79,7 @@ export const AI_MODEL_CONFIG_DEFAULT: AIModelConfig = {
   [MODEL_PROVIDER_OPENROUTER]: {
     chatModels: [
       {
-        label: "Gemmini Pro Free",
+        label: "Gemmini Pro 1.5 Experimental Free",
         modelName: "google/learnlm-1.5-pro-experimental:free",
         maxOutputTokens: 4096,
         temperature: 0,

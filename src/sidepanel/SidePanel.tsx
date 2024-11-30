@@ -297,10 +297,10 @@ export function SidePanel(): JSX.Element {
 
     if (aiModelConfig) {
       for (const modelProvider of [
+        "openrouter",
         "openai",
         "ollama",
         "anthropic",
-        "openrouter",
       ] as ModelProvider[]) {
         const config = aiModelConfig[modelProvider];
         for (const item of config.chatModels) {
