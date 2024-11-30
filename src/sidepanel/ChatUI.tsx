@@ -6,7 +6,6 @@ import {
   Notification,
   Stack,
   Group,
-  SegmentedControl,
   Image,
   Text,
   ActionIcon,
@@ -204,31 +203,14 @@ export const ChatUI = ({
               </Group>
             ) : (
               <>
-                <SegmentedControl
-                  value={queryMode}
-                  onChange={handleSegmentedControlChange}
-                  size="sm"
-                  color="blue"
-                  data={[
-                    { label: "General", value: "general" },
-                    { label: "Webpage", value: "webpage-text-qa" },
-                    {
-                      label: "Vision",
-                      value: "webpage-vqa",
-                      disabled: !modelConfig || !modelConfig.hasVision,
-                    },
-                  ]}
-                />
-                {queryMode === "webpage-vqa" && (
-                  <Group position="center">
-                    <Switch
-                      label="Auto-screenshot"
-                      checked={autoScreenshot}
-                      onChange={(event) => setAutoScreenshot(event.currentTarget.checked)}
-                      size="sm"
-                    />
-                  </Group>
-                )}
+                <Group position="center">
+                  <Switch
+                    label="Auto-screenshot"
+                    checked={autoScreenshot}
+                    onChange={(event) => setAutoScreenshot(event.currentTarget.checked)}
+                    size="sm"
+                  />
+                </Group>
               </>
             )}
             <QuestionTextArea

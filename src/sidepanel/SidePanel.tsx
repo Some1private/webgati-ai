@@ -49,7 +49,7 @@ export function SidePanel(): JSX.Element {
   const [error, setError] = useState("");
   const [messages, setMessages] = useState<Array<ChatMessage>>([]);
   const [webpageMarkdown, setWebpageMarkdown] = useState("");
-  const [queryMode, setQueryMode] = useState<QueryMode>("general");
+  const [queryMode, setQueryMode] = useState<QueryMode>("webpage-vqa");
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
   const [modelSelectOptions, setModelSelectOptions] = useState<any[]>([]);
   const [selectedModel, setSelectedModel] = useState<{
