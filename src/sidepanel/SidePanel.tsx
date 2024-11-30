@@ -49,7 +49,7 @@ export function SidePanel(): JSX.Element {
   const [error, setError] = useState("");
   const [messages, setMessages] = useState<Array<ChatMessage>>([]);
   const [webpageMarkdown, setWebpageMarkdown] = useState("");
-  const [queryMode, setQueryMode] = useState<QueryMode>("webpage-vqa");
+  const [queryMode, setQueryMode] = useState<QueryMode>("general");
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
   const [modelSelectOptions, setModelSelectOptions] = useState<any[]>([]);
   const [selectedModel, setSelectedModel] = useState<{
@@ -179,16 +179,8 @@ export function SidePanel(): JSX.Element {
 
       if (queryMode === "webpage-vqa") {
         if (!imageData) {
-          // If no image data is present, try to capture the screen
-          try {
-            const screenshot = await chrome.runtime.sendMessage({
-              type: "any_capture-visible-screen",
-            });
-            setImageData(screenshot);
-          } catch (error) {
-            setError("Failed to capture screenshot");
-            return;
-          }
+          setError("Please capture an image first before asking a visual question");
+          return;
         }
 
         swPort?.postMessage({
@@ -200,6 +192,9 @@ export function SidePanel(): JSX.Element {
             imageData,
           } as AppMessagePayloadWebpageVQA,
         } as AppMessageBotExecute);
+        
+        setImageData(null);
+        setQueryMode("general");
       } else {
         swPort?.postMessage({
           type: "sp_bot-execute",
@@ -211,7 +206,7 @@ export function SidePanel(): JSX.Element {
         } as AppMessageBotExecute);
       }
     },
-    [analyzeWebpage, imageData, swPort, webpageMarkdown, setError]
+    [analyzeWebpage, imageData, swPort, webpageMarkdown, setError, setQueryMode]
   );
 
   const handleStopPromptProcessing = useCallback(() => {
@@ -281,8 +276,6 @@ export function SidePanel(): JSX.Element {
   );
 
   const init = useCallback(async () => {
-    clearSessionState();
-
     const tab = (
       await chrome.tabs.query({ active: true, currentWindow: true })
     ).at(0);
@@ -297,7 +290,7 @@ export function SidePanel(): JSX.Element {
     if (lastSelectedModelId) {
       setSelectedModelId(lastSelectedModelId);
     }
-  }, [clearSessionState]);
+  }, []);
 
   const populateModelSelect = (aiModelConfig: AIModelConfig | null) => {
     const modelOptions = [];
@@ -339,8 +332,8 @@ export function SidePanel(): JSX.Element {
   useStorageOnChanged(handleStorageChange);
 
   const handleUrlChange = useCallback(() => {
-    clearSessionState();
-  }, [clearSessionState]);
+    // Removed clearSessionState() - now does nothing
+  }, []);
 
   const handleSelectionPrompt = useCallback(
     (prompt: string) => {
@@ -377,8 +370,7 @@ export function SidePanel(): JSX.Element {
   const disableInput =
     !selectedModel ||
     requiresApiKey ||
-    isBotProcessing ||
-    (queryMode === "webpage-vqa" && !imageData);
+    isBotProcessing;
 
   return (
     <AppContext.Provider
@@ -449,11 +441,6 @@ export function SidePanel(): JSX.Element {
             <Button color="orange" size="xs" onClick={openSettings}>
               Open Settings
             </Button>
-          </Alert>
-        )}
-        {queryMode === "webpage-vqa" && !imageData && (
-          <Alert icon={<IconAlertCircle size={16} />} color="red">
-            Please capture image
           </Alert>
         )}
         <ChatUI

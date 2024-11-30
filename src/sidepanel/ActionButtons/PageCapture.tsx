@@ -2,16 +2,17 @@ import React from "react";
 import { ActionButton } from "./ActionButton";
 import { useContext, useState } from "react";
 import { AppContext } from "../../utils/app-context";
-import { AppMessageCaptureVisibleScreen } from "../../utils/types";
+import { AppMessageCaptureVisibleScreen, QueryMode } from "../../utils/types";
 import { ActionIcon } from "@mantine/core";
 import { IconCamera, IconCheck } from "@tabler/icons-react";
 
 interface PageCaptureProps {
   compact?: boolean;
   hasImage?: boolean;
+  setQueryMode: (mode: QueryMode) => void;
 }
 
-export function PageCapture({ compact = false, hasImage = false }: PageCaptureProps): JSX.Element {
+export function PageCapture({ compact = false, hasImage = false, setQueryMode }: PageCaptureProps): JSX.Element {
   const { handleImageCapture } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,6 +23,7 @@ export function PageCapture({ compact = false, hasImage = false }: PageCapturePr
         type: "any_capture-visible-screen",
       });
     handleImageCapture(imageData);
+    setQueryMode("webpage-vqa");
     setIsLoading(false);
   };
 

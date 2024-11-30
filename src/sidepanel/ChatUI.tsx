@@ -128,7 +128,15 @@ export const ChatUI = ({
         mb="4px"
         pb="36px"
         spacing="xs"
-        sx={{ flex: 1, overflow: "scroll" }}
+        sx={{
+          flex: 1,
+          overflow: "auto",
+          scrollbarWidth: "none",  // Firefox
+          "&::-webkit-scrollbar": {  // Webkit (Chrome, Safari, Edge)
+            display: "none"
+          },
+          "-ms-overflow-style": "none",  // IE and Edge
+        }}
         ref={scrollableRef}
       >
         {messages.slice(0, -1).map((message, index) => {
@@ -174,7 +182,11 @@ export const ChatUI = ({
           </Notification>
         )}
         <form ref={formRef} onSubmit={form.onSubmit(handleFormSubmit)}>
-          <Stack spacing="xs" sx={{ background: 'white', borderTop: '1px solid #eee', padding: '8px' }}>
+          <Stack spacing="xs" sx={(theme) => ({
+            background: theme.colorScheme === 'dark' ? theme.colors.dark[6] : 'white',
+            borderTop: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[4] : '#eee'}`,
+            padding: '8px'
+          })}>
             {isLoading ? (
               <Group position="center">
                 <Button
@@ -214,7 +226,11 @@ export const ChatUI = ({
                 >
                   Send
                 </Button>
-                <PageCapture compact hasImage={!!imageData} />
+                <PageCapture 
+                  compact 
+                  hasImage={!!imageData} 
+                  setQueryMode={setQueryMode} 
+                />
               </Group>
             </Box>
           </Stack>

@@ -31,14 +31,18 @@ export const Message = React.forwardRef<HTMLDivElement, MessageProps>(
     return (
       <Box
         ref={ref}
-        sx={(theme) => {
-          return {
-            borderRadius: theme.radius.sm,
-            backgroundColor:
-              role === "human" ? theme.colors.gray[2] : theme.colors.blue[1],
-            padding: "8px",
-          };
-        }}
+        sx={(theme) => ({
+          borderRadius: theme.radius.sm,
+          backgroundColor: theme.colorScheme === 'dark'
+            ? role === "human" 
+              ? theme.colors.dark[5] 
+              : theme.colors.dark[4]
+            : role === "human" 
+              ? theme.colors.gray[2] 
+              : theme.colors.blue[1],
+          padding: "8px",
+          color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
+        })}
       >
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}

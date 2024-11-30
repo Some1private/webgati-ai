@@ -31,7 +31,10 @@ const emotionCache = createEmotionCache({
 });
 
 ReactDOM.createRoot(shadowRootDiv).render(
-  <MantineProvider theme={globalTheme} emotionCache={emotionCache}>
+  <MantineProvider 
+    theme={{...globalTheme, colorScheme: 'dark'}} 
+    emotionCache={emotionCache}
+  >
     <ContentScriptApp />
   </MantineProvider>
 );
