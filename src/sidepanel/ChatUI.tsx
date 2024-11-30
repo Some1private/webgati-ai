@@ -18,6 +18,7 @@ import { Message } from "./Message";
 import { useScrollIntoView } from "@mantine/hooks";
 import { QueryMode, ModelConfig, ChatMessage } from "../utils/types";
 import { IconX } from "@tabler/icons-react";
+import { PageCapture } from "./ActionButtons/PageCapture";
 
 interface ChatUIProps {
   messages: ChatMessage[];
@@ -53,7 +54,6 @@ export const ChatUI = ({
   const formRef = useRef<HTMLFormElement>(null);
   const [showLoader, setShowLoader] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
-  const [autoScreenshot, setAutoScreenshot] = useState(false);
 
   const { scrollIntoView, scrollableRef, targetRef } =
     useScrollIntoView<HTMLDivElement>({
@@ -92,23 +92,7 @@ export const ChatUI = ({
   const handleFormSubmit = async (values: { question: string }) => {
     setShowLoader(true);
     form.reset();
-
-    if (queryMode === "webpage-vqa" && autoScreenshot) {
-      try {
-        const screenshot = await chrome.runtime.sendMessage({
-          type: "any_capture-visible-screen",
-        });
-        clearImageData();
-        await new Promise(resolve => setTimeout(resolve, 100)); // Small delay to ensure clearImageData completes
-        await processUserPrompt(values.question.trim());
-      } catch (error) {
-        setError("Failed to capture screenshot");
-        setShowLoader(false);
-        return;
-      }
-    } else {
-      await processUserPrompt(values.question.trim());
-    }
+    await processUserPrompt(values.question.trim());
   };
 
   const handleSegmentedControlChange = (value: QueryMode) => {
@@ -190,7 +174,7 @@ export const ChatUI = ({
           </Notification>
         )}
         <form ref={formRef} onSubmit={form.onSubmit(handleFormSubmit)}>
-          <Stack spacing="xs">
+          <Stack spacing="xs" sx={{ background: 'white', borderTop: '1px solid #eee', padding: '8px' }}>
             {isLoading ? (
               <Group position="center">
                 <Button
@@ -201,64 +185,38 @@ export const ChatUI = ({
                   Stop
                 </Button>
               </Group>
-            ) : (
-              <>
-                <Group position="center">
-                  <Switch
-                    label="Auto-screenshot"
-                    checked={autoScreenshot}
-                    onChange={(event) => setAutoScreenshot(event.currentTarget.checked)}
-                    size="sm"
-                  />
-                </Group>
-              </>
-            )}
-            <QuestionTextArea
-              form={form}
-              handleEnterKey={handleEnterKey}
-              disableInput={disableInput}
-              required
-            />
-            <Group>
-              <Button
-                size="xs"
-                variant="outline"
-                onClick={clearChatContext}
-                disabled={disableInput}
-              >
-                Clear Chat
-              </Button>
-              <Button
-                type="submit"
-                disabled={disableInput}
-                size="xs"
-                sx={{ flex: 1 }}
-              >
-                Send
-              </Button>
-            </Group>
-            {/* Remove or comment out the image preview section
-            {imageData && (
-              <Box
-                sx={{
-                  width: "fit-content",
-                  borderStyle: "solid",
-                  borderWidth: "0.5px",
-                }}
-              >
-                <ActionIcon onClick={clearImageData}>
-                  <IconX size="16px" />
-                </ActionIcon>
-                <Image
-                  width="100px"
-                  height="100px"
-                  fit="contain"
-                  src={imageData}
-                  withPlaceholder
-                  placeholder={<Text>Image preview unavailable</Text>}
+            ) : null}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Box sx={{ flex: 1 }}>
+                <QuestionTextArea
+                  form={form}
+                  handleEnterKey={handleEnterKey}
+                  disableInput={disableInput}
+                  required
                 />
               </Box>
-            )} */}
+              <Group spacing="xs" noWrap>
+                <Button
+                  size="xs"
+                  variant="subtle"
+                  color="gray"
+                  onClick={clearChatContext}
+                  disabled={disableInput}
+                  compact
+                >
+                  Clear
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={disableInput}
+                  size="xs"
+                  compact
+                >
+                  Send
+                </Button>
+                <PageCapture compact hasImage={!!imageData} />
+              </Group>
+            </Box>
           </Stack>
         </form>
       </Box>

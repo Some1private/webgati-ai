@@ -3,8 +3,15 @@ import { ActionButton } from "./ActionButton";
 import { useContext, useState } from "react";
 import { AppContext } from "../../utils/app-context";
 import { AppMessageCaptureVisibleScreen } from "../../utils/types";
+import { ActionIcon } from "@mantine/core";
+import { IconCamera, IconCheck } from "@tabler/icons-react";
 
-export function PageCapture(): JSX.Element {
+interface PageCaptureProps {
+  compact?: boolean;
+  hasImage?: boolean;
+}
+
+export function PageCapture({ compact = false, hasImage = false }: PageCaptureProps): JSX.Element {
   const { handleImageCapture } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -17,6 +24,20 @@ export function PageCapture(): JSX.Element {
     handleImageCapture(imageData);
     setIsLoading(false);
   };
+
+  if (compact) {
+    return (
+      <ActionIcon
+        loading={isLoading}
+        variant="filled"
+        size="lg"
+        onClick={handleClick}
+        color={hasImage ? "green" : "blue"}
+      >
+        {hasImage ? <IconCheck size="1.1rem" /> : <IconCamera size="1.1rem" />}
+      </ActionIcon>
+    );
+  }
 
   return (
     <ActionButton

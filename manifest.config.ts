@@ -5,7 +5,7 @@ import { defineManifest } from "@crxjs/vite-plugin";
 
 import packageJson from "./package.json";
 
-const APP_NAME = "Webgati AI";
+const APP_NAME = "AI Assistant";
 
 const { version } = packageJson;
 

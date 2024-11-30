@@ -22,7 +22,8 @@ export function QuestionTextArea({
     <Textarea
       label={label}
       placeholder={placeholder}
-      minRows={2}
+      minRows={1}
+      autosize
       onKeyDown={(event) => {
         if (disableInput) {
           return;
@@ -37,6 +38,21 @@ export function QuestionTextArea({
         }
       }}
       required={required}
+      styles={(theme) => ({
+        input: {
+          border: 'none',
+          backgroundColor: 'transparent',
+          '&:focus': {
+            border: 'none',
+            outline: 'none',
+          },
+          padding: '8px 0',
+          fontSize: '14px',
+        },
+        wrapper: {
+          border: 'none',
+        }
+      })}
       {...form.getInputProps("question")}
     />
   );

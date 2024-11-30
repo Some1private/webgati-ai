@@ -141,8 +141,8 @@ export class AIService {
         configuration: {
           baseURL: "https://openrouter.ai/api/v1",
           defaultHeaders: {
-            "HTTP-Referer": "https://github.com/webgati/webgati-ai",
-            "X-Title": "Webgati AI",
+            "HTTP-Referer": "https://github.com/some1private/",
+            "X-Title": "AI Assistant",
           },
         },
       });
