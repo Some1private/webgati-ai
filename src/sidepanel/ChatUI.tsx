@@ -255,6 +255,7 @@ export const ChatUI = ({
                 Send
               </Button>
             </Group>
+            {/* Remove or comment out the image preview section
             {imageData && (
               <Box
                 sx={{
@@ -275,7 +276,7 @@ export const ChatUI = ({
                   placeholder={<Text>Image preview unavailable</Text>}
                 />
               </Box>
-            )}
+            )} */}
           </Stack>
         </form>
       </Box>
